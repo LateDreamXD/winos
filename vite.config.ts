@@ -14,7 +14,8 @@ export default <UserConfig>{
 		rollupOptions: {
 			output: {
 				manualChunks: {
-					'vue': ['vue']
+					vue: ['vue'],
+					vuex: ['vuex']
 				}
 			}
 		}
