@@ -1,49 +1,74 @@
-<script lang="ts" setup>
-import { ref } from 'vue';
+<script setup lang="ts">
+import { computed } from 'vue'
+import { useStore } from 'vuex'
+import Taskbar from './components/Taskbar.vue'
+import OsWindow from './components/OsWindow.vue'
+import DesktopIcon from './components/DesktopIcon.vue'
 
-const count = ref(0);
-const dev = import.meta.env.DEV;
+const store = useStore()
+const windows = computed(() => store.state.windows)
 
-function countUp() {
-	count.value++;
-}
+const icons = [
+	{ id: 'explorer', title: 'Explorer', icon: '📁' },
+	{ id: 'browser', title: 'Browser', icon: '🌐' },
+	{ id: 'notepad', title: 'Notepad', icon: '📝' },
+	{ id: 'settings', title: 'Settings', icon: '⚙️' }
+]
 </script>
 
 <template>
-	<main>
-		<h1>Ciallo～(∠・ω< )⌒★<span v-if="dev">&nbsp;DEV</span></h1>
-		<button @click="countUp"
-			v-text="!!count? `You are clicked me ${count} time(s)!`: 'Click me!'">
-		</button>
-		<p>
-			powered by vue, vite, scss, and typescript
-		</p>
-	</main>
+	<div class="desktop">
+		<div class="icons-layer">
+			<DesktopIcon
+				v-for="icon in icons"
+				:key="icon.id"
+				v-bind="icon"
+			/>
+		</div>
+
+		<div class="windows-layer">
+			<OsWindow
+				v-for="win in windows"
+				:key="win.id"
+				:window="win"
+			/>
+		</div>
+
+		<Taskbar />
+	</div>
 </template>
 
-<style lang="scss" scoped>
-@keyframes fadeIn {
-	from {
-		opacity: 0;
-	}
-	to {
-		opacity: 1;
-	}
+<style lang="scss">
+html, body {
+	margin: 0;
+	padding: 0;
+	width: 100%;
+	height: 100%;
+	overflow: hidden;
+	font-family: 'Segoe UI', sans-serif;
 }
-main {
-	animation: fadeIn 0.4s ease-in-out;
-	> button {
-		border: none;
-		border-radius: 8px;
-		background-color: deepskyblue;
-		font-size: 1.2em;
-		padding: 0.5em 1em;
-		outline: 1px solid transparent;
-		transition: background-color 0.4s, outline-color 0.4s;
-		&:hover {
-			background-color: skyblue;
-			outline-color: yellow;
-		}
+
+#app {
+	width: 100%;
+	height: 100%;
+}
+
+.desktop {
+	width: 100%;
+	height: 100%;
+	background: url('https://images.unsplash.com/photo-1579546929518-9e396f3cc809?auto=format&fit=crop&w=1920&q=80') no-repeat center center;
+	background-size: cover;
+	position: relative;
+	overflow: hidden;
+
+	.icons-layer {
+		padding: 10px;
+		display: flex;
+		flex-direction: column;
+		gap: 10px;
+		flex-wrap: wrap;
+		height: 90%;
+		align-content: flex-start;
 	}
 }
 </style>
